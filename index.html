@@ -1,10 +1,2394 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Free Website</title>
+  <meta charset="UTF-8" />
+  <title>Ankit Panicker — Automation, AI Voice & Futuristic UI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #030712;
+      --fg: #f9fafb;
+      --fg-soft: #e5e7eb;
+      --fg-muted: #9ca3af;
+
+      --accent: #22d3ee;
+      --accent-strong: #0ea5e9;
+      --accent-soft: rgba(34, 211, 238, 0.4);
+
+      --accent-alt: #fbbf24;
+      --accent-alt-strong: #f59e0b;
+      --accent-alt-soft: rgba(251, 191, 36, 0.35);
+
+      --glass-bg: rgba(15, 23, 42, 0.9);
+      --glass-border: rgba(148, 163, 184, 0.55);
+
+      --radius-xl: 26px;
+      --radius-lg: 20px;
+    }
+
+    body.theme-orange {
+      --accent: #fbbf24;
+      --accent-strong: #f59e0b;
+      --accent-soft: rgba(251, 191, 36, 0.45);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #000 55%, #000 100%);
+      color: var(--fg);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      min-height: 100vh;
+      position: relative;
+      z-index: 2;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.4rem;
+    }
+
+    /* BACKGROUND LAYERS */
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(31, 41, 55, 0.3) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(31, 41, 55, 0.3) 1px, transparent 1px);
+      background-size: 90px 90px;
+      mix-blend-mode: soft-light;
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      background:
+        radial-gradient(circle at 10% 0, rgba(34, 211, 238, 0.15), transparent 60%),
+        radial-gradient(circle at 80% 0, rgba(59, 130, 246, 0.35), transparent 60%),
+        radial-gradient(circle at 50% 100%, rgba(15, 23, 42, 0.9), transparent 70%);
+      opacity: 0.9;
+      z-index: 0;
+    }
+
+    .bg-cubes {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .cube {
+      position: absolute;
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(0, 0, 0, 0.98));
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.9),
+        0 0 26px rgba(0, 0, 0, 1);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      opacity: 0.5;
+      transform: translateZ(0) rotateX(8deg) rotateY(-8deg);
+    }
+
+    .cube-1 { width: 160px; height: 110px; top: 9%; left: 9%; }
+    .cube-2 { width: 220px; height: 140px; top: 62%; right: 6%; }
+    .cube-3 { width: 130px; height: 90px; bottom: 10%; left: 18%; }
+    .cube-4 { width: 180px; height: 120px; top: 32%; right: 22%; opacity: 0.35; }
+
+    #particle-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* CUSTOM CURSOR */
+
+    .cursor-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+
+    .cursor-ring {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 2px solid var(--accent-soft);
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%) scale(1);
+      transition:
+        transform 0.16s ease-out,
+        border-color 0.16s ease-out,
+        opacity 0.16s ease-out;
+      opacity: 0.85;
+    }
+
+    .cursor-ring.cursor-hover {
+      transform: translate(-50%, -50%) scale(1.4);
+      border-color: var(--accent-strong);
+      opacity: 1;
+    }
+
+    .cursor-trail {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      filter: blur(6px);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 9997;
+    }
+
+    /* HEADER */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.92), rgba(0,0,0,0.7), transparent);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 0;
+      gap: 1rem;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .logo-orb {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      padding: 2px;
+      background: radial-gradient(circle at 30% 20%, #e5f3ff, #020617);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.95),
+        0 0 18px var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-orb-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: radial-gradient(circle at 30% 20%, #f9fafb, #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #0f172a;
+    }
+
+    .logo-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .logo-main {
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .logo-sub {
+      font-size: 0.7rem;
+      color: var(--fg-muted);
+    }
+
+    .nav-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+    }
+
+    .nav-links a {
+      position: relative;
+      padding-block: 0.24rem;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.2s ease-out;
+    }
+
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle-shell {
+      position: relative;
+      width: 64px;
+      height: 28px;
+      border-radius: 999px;
+      padding: 3px;
+      background:
+        radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.16), transparent 60%),
+        linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(3, 7, 18, 0.98));
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 1),
+        0 16px 32px rgba(0, 0, 0, 1);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-toggle-knob {
+      position: relative;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 30% 20%, #ffffff, #dbeafe 55%, #020617 100%);
+      box-shadow:
+        0 6px 16px rgba(0, 0, 0, 1),
+        0 0 18px var(--accent-soft);
+      transform: translateX(0);
+      transition:
+        transform 0.24s ease-out,
+        box-shadow 0.24s ease-out,
+        background 0.24s ease-out;
+    }
+
+    body.theme-orange .theme-toggle-knob {
+      transform: translateX(32px);
+      background:
+        radial-gradient(circle at 30% 20%, #fff7ed, #fed7aa 55%, #020617 100%);
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 0.7rem 1.5rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      transition:
+        transform 0.16s ease-out,
+        box-shadow 0.16s ease-out,
+        border-color 0.16s ease-out,
+        background 0.16s ease-out;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      color: #020617;
+      background:
+        radial-gradient(circle at 0 0, rgba(248, 250, 252, 0.18), transparent 55%),
+        linear-gradient(90deg, var(--accent), var(--accent-strong));
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 1),
+        0 0 26px var(--accent-soft);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 1),
+        0 0 36px var(--accent-soft);
+    }
+
+    .btn-ghost {
+      color: var(--fg-soft);
+      background: rgba(0, 0, 0, 0.9);
+      border-color: rgba(31, 41, 55, 0.95);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent-soft);
+      box-shadow: 0 0 16px var(--accent-soft);
+      transform: translateY(-1px);
+    }
+
+    /* HERO */
+
+    .hero {
+      padding: 3.8rem 0 4.4rem;
+      position: relative;
+    }
+
+
+
+    @keyframes heroWave {
+      0%,100% { transform: translateX(0); }
+      50% { transform: translateX(28px); }
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.26rem 0.6rem 0.26rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: rgba(0, 0, 0, 0.86);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      overflow: hidden;
+      position: relative;
+    }
+
+
+
+    @keyframes pillSweep {
+      0% { transform: translateX(-120%); }
+      30% { transform: translateX(130%); }
+      100% { transform: translateX(130%); }
+    }
+
+    .hero-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: radial-gradient(circle, var(--accent), var(--accent-strong));
+      box-shadow: 0 0 12px var(--accent-strong);
+      animation: dotPulse 1.9s ease-in-out infinite;
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.4); opacity: 1; }
+    }
+
+    .hero-title {
+      margin-top: 1.5rem;
+      font-size: clamp(2.5rem, 4.1vw, 3.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.045em;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeUp 0.9s ease-out forwards;
+      position: relative;
+      will-change: transform;
+    }
+
+    .hero-title span {
+      background: linear-gradient(
+        135deg,
+        #f9fafb,
+        var(--accent),
+        var(--accent-strong)
+      );
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-title span.glitch {
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero-title span.glitch::before,
+    .hero-title span.glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: transparent;
+      opacity: 0.6;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .hero-title span.glitch::before {
+      transform: translateX(-1px);
+      color: #22d3ee;
+      animation: glitchX 2.3s infinite ease-in-out;
+    }
+
+    .hero-title span.glitch::after {
+      transform: translateX(1px);
+      color: #f97316;
+      animation: glitchY 3s infinite ease-in-out;
+    }
+
+    @keyframes glitchX {
+      0%, 100% { transform: translateX(0); opacity: 0.3; }
+      10% { transform: translateX(-2px); opacity: 0.8; }
+      20% { transform: translateX(1px); opacity: 0.5; }
+      30% { transform: translateX(-1px); opacity: 0.6; }
+      40% { transform: translateX(0); opacity: 0.3; }
+    }
+
+    @keyframes glitchY {
+      0%, 100% { transform: translateY(0); opacity: 0.3; }
+      15% { transform: translateY(1px); opacity: 0.7; }
+      25% { transform: translateY(-1px); opacity: 0.5; }
+      35% { transform: translateY(0); opacity: 0.4; }
+    }
+
+    .hero-subtitle {
+      margin-top: 1.2rem;
+      max-width: 34rem;
+      font-size: 0.96rem;
+      color: var(--fg-muted);
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.95s ease-out forwards;
+      animation-delay: 0.18s;
+    }
+
+    .hero-subtitle strong {
+      color: var(--fg-soft);
+    }
+
+    .hero-subtitle.emphasis {
+      margin-top: 1.1rem;
+      font-weight: 500;
+      color: var(--fg-soft);
+      animation-delay: 0.35s;
+    }
+
+    .hero-actions {
+      margin-top: 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fadeUp 0.95s ease-out forwards;
+      animation-delay: 0.55s;
+    }
+
+    .cta-tagline {
+      margin-top: 1.2rem;
+      font-size: 0.86rem;
+      color: var(--fg-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.95s ease-out forwards;
+      animation-delay: 0.7s;
+    }
+
+    .cta-tagline span {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    /* HERO RIGHT PANEL */
+
+    .holo-reflect {
+      position: relative;
+      overflow: hidden;
+    }
+
+
+
+    @keyframes holoSwipe {
+      0%   { transform: translateX(-120%); }
+      40%  { transform: translateX(220%); }
+      100% { transform: translateX(220%); }
+    }
+
+
+    @keyframes scanMove {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(20px); }
+    }
+
+    .hero-panel-wrap {
+      border-radius: var(--radius-xl);
+      padding: 1px;
+      background:
+        radial-gradient(circle at 0 0, rgba(148, 163, 184, 0.3), transparent 60%),
+        linear-gradient(145deg, rgba(148, 163, 184, 0.65), rgba(51, 65, 85, 0.6), rgba(15, 23, 42, 0.95));
+      box-shadow:
+        0 26px 70px rgba(0, 0, 0, 0.96),
+        0 0 40px rgba(0, 0, 0, 1);
+      position: relative;
+      overflow: hidden;
+      animation: floatHUD 6s ease-in-out infinite;
+    }
+
+    @keyframes floatHUD {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .hero-panel {
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 10% 0, rgba(255, 255, 255, 0.16), transparent 55%),
+        linear-gradient(145deg, rgba(15, 23, 42, 0.98), #020617);
+      backdrop-filter: blur(24px) saturate(170%);
+      -webkit-backdrop-filter: blur(24px) saturate(170%);
+      border: 1px solid rgba(249, 250, 251, 0.18);
+      padding: 1.3rem 1.25rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      color: var(--fg-muted);
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 3;
+    }
+
+    .hero-panel-title {
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .hero-panel-status {
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent-soft);
+      background: rgba(0, 0, 0, 0.86);
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .hero-panel-status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: radial-gradient(circle, var(--accent), var(--accent-strong));
+      box-shadow: 0 0 10px var(--accent-strong);
+      animation: statusBlink 1.6s ease-in-out infinite;
+    }
+
+    @keyframes statusBlink {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    .hero-panel-main {
+      display: grid;
+      grid-template-columns: 3fr 2.1fr;
+      gap: 1.2rem;
+      align-items: center;
+      position: relative;
+      z-index: 3;
+    }
+
+    .hero-graph {
+      position: relative;
+      height: 170px;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at 0 0, rgba(148, 163, 184, 0.22), transparent 60%),
+        linear-gradient(145deg, rgba(15, 23, 42, 0.98), #020617);
+      border: 1px solid rgba(55, 65, 81, 0.95);
+      overflow: hidden;
+    }
+
+    /* Water droplets behind graph text */
+
+    .droplet3d {
+      position: absolute;
+      background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.9), rgba(148, 163, 184, 0.4), rgba(15, 23, 42, 0.9));
+      border-radius: 999px;
+      box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.9),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      pointer-events: none;
+    }
+
+    .droplet3d::after {
+      content: "";
+      position: absolute;
+      width: 55%;
+      height: 55%;
+      top: 10%;
+      left: 18%;
+      border-radius: inherit;
+      background: radial-gradient(circle, rgba(255,255,255,0.95), transparent 60%);
+      opacity: 0.9;
+      mix-blend-mode: screen;
+    }
+
+    .droplet-shadow {
+      position: absolute;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(0, 0, 0, 0.9), transparent 70%);
+      opacity: 0.75;
+      pointer-events: none;
+      filter: blur(6px);
+    }
+
+    .dr-hero-1 { width: 24px; height: 24px; top: 26px; left: 40px; }
+    .dr-hero-2 { width: 14px; height: 14px; top: 80px; left: 80px; }
+    .dr-hero-3 { width: 28px; height: 28px; bottom: 26px; right: 32px; }
+
+    .dr-shadow-1 { width: 30px; height: 12px; top: 48px; left: 42px; }
+    .dr-shadow-2 { width: 20px; height: 10px; top: 96px; left: 82px; }
+    .dr-shadow-3 { width: 34px; height: 14px; bottom: 18px; right: 33px; }
+
+    .hero-graph::before,
+    .hero-graph::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      mix-blend-mode: screen;
+      background-image: linear-gradient(120deg, var(--accent), var(--accent-strong));
+      filter: blur(1px);
+    }
+
+    .hero-graph::before {
+      opacity: 0.9;
+      animation: graphWaveA 9s ease-in-out infinite;
+    }
+
+    .hero-graph::after {
+      opacity: 0.55;
+      animation: graphWaveB 13s ease-in-out infinite;
+    }
+
+    @keyframes graphWaveA {
+      0% {
+        clip-path: polygon(0 70%, 20% 55%, 40% 72%, 60% 48%, 80% 70%, 100% 52%, 100% 100%, 0 100%);
+      }
+      50% {
+        clip-path: polygon(0 58%, 20% 72%, 40% 48%, 60% 70%, 80% 52%, 100% 68%, 100% 100%, 0 100%);
+      }
+      100% {
+        clip-path: polygon(0 70%, 20% 55%, 40% 72%, 60% 48%, 80% 70%, 100% 52%, 100% 100%, 0 100%);
+      }
+    }
+
+    @keyframes graphWaveB {
+      0% {
+        clip-path: polygon(0 50%, 18% 70%, 37% 45%, 55% 70%, 72% 52%, 100% 65%, 100% 100%, 0 100%);
+      }
+      50% {
+        clip-path: polygon(0 68%, 18% 45%, 37% 72%, 55% 48%, 72% 68%, 100% 50%, 100% 100%, 0 100%);
+      }
+      100% {
+        clip-path: polygon(0 50%, 18% 70%, 37% 45%, 55% 70%, 72% 52%, 100% 65%, 100% 100%, 0 100%);
+      }
+    }
+
+    .hero-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      font-size: 0.8rem;
+    }
+
+    .metric-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.85rem;
+    }
+
+    .metric-label {
+      color: var(--fg-muted);
+      font-size: 0.76rem;
+    }
+
+    .metric-value {
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .metric-pill {
+      font-size: 0.7rem;
+      padding: 0.14rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid var(--accent-soft);
+      color: var(--accent);
+      margin-left: 0.3rem;
+    }
+
+    .hero-cli-chip {
+      margin-top: 0.8rem;
+      border-radius: 999px;
+      padding: 0.45rem 0.7rem;
+      font-size: 0.76rem;
+      background: rgba(0,0,0,0.9);
+      border: 1px solid rgba(31,41,55,0.9);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--fg-muted);
+    }
+
+    .hero-cli-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, var(--accent), #020617);
+      box-shadow: 0 0 10px var(--accent-soft);
+    }
+
+    /* SECTION GENERIC */
+
+    section {
+      position: relative;
+      z-index: 2;
+      padding: 3.5rem 0;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 2.2rem;
+    }
+
+    .eyebrow {
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      letter-spacing: -0.03em;
+    }
+
+    .section-title span {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .section-subtitle {
+      margin-top: 0.6rem;
+      font-size: 0.88rem;
+      color: var(--fg-muted);
+    }
+
+    /* AUTOMATIONS SECTION */
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.7rem;
+    }
+
+    .glass-card {
+      position: relative;
+      border-radius: var(--radius-lg);
+      padding: 1.3rem 1.3rem 1.4rem;
+      background:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.12), transparent 55%),
+        linear-gradient(145deg, rgba(15,23,42,0.98), rgba(0,0,0,0.98));
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.98),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transform: translateZ(0);
+      transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-10px);
+      box-shadow:
+        0 26px 60px rgba(0, 0, 0, 1),
+        0 0 30px var(--accent-soft);
+      border-color: rgba(249, 250, 251, 0.25);
+    }
+
+    .card-kicker {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--fg-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #f9fafb, var(--accent-strong));
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 0.3rem;
+    }
+
+    .card-body {
+      font-size: 0.86rem;
+      color: var(--fg-muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .card-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.7rem;
+      font-size: 0.78rem;
+      color: var(--fg-muted);
+    }
+
+    .card-tag {
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent-soft);
+      background: rgba(0,0,0,0.92);
+      color: var(--accent);
+    }
+
+    /* WHAT I BUILD (animated icons) */
+
+    .build-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.7rem;
+    }
+
+    .build-card {
+      position: relative;
+      padding: 1.4rem 1.3rem;
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(0, 0, 0, 0.98));
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .build-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 30px 80px rgba(0,0,0,1),
+                  0 0 40px var(--accent-soft);
+    }
+
+    .build-card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .build-card p {
+      font-size: 0.84rem;
+      color: var(--fg-muted);
+      margin-bottom: 0.7rem;
+    }
+    .build-icon {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 0.65rem;
+
+        /* Gear base circle */
+        background: linear-gradient(145deg, #18181b, #0f0f10);
+        border-radius: 50%;
+        position: relative;
+
+        border: 2px solid rgba(255,255,255,0.06);
+        box-shadow:
+            inset 0 2px 4px rgba(255,255,255,0.04),
+            inset 0 -2px 4px rgba(0,0,0,0.45),
+            0 2px 6px rgba(0,0,0,0.55);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        animation: gearPulse 4s ease-in-out infinite;
+    }
+
+    /* Gear teeth */
+    .build-icon::before,
+    .build-icon::after {
+        content: "";
+        position: absolute;
+        inset: -6px;
+        border-radius: 50%;
+        border: 6px solid transparent;
+        border-top-color: rgba(255,255,255,0.08);
+        border-bottom-color: rgba(255,255,255,0.08);
+        border-left-color: rgba(0,0,0,0.45);
+        border-right-color: rgba(0,0,0,0.45);
+        transform: rotate(45deg);
+        pointer-events: none;
+    }
+
+    /* 2nd teeth layer for depth */
+    .build-icon::after {
+        inset: -10px;
+        opacity: 0.18;
+        transform: rotate(0deg);
+    }
+
+    /* Inner gear hole */
+    .build-icon .gear-center {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: linear-gradient(145deg, #0d0d0f, #111111);
+        box-shadow:
+            inset 0 2px 4px rgba(255,255,255,0.05),
+            inset 0 -2px 4px rgba(0,0,0,0.45);
+    }
+
+    /* subtle breathing motion */
+    @keyframes gearPulse {
+        0%, 100% { transform: scale(1); }
+        50%      { transform: scale(1.04); }
+    }
+
+
+    /* your neon keyframes, adapted to theme colors */
+    @keyframes neon {
+      0% {
+        transform: translate(0px, 0px);
+        opacity: 1;
+        filter: drop-shadow(0 0 8px var(--accent));
+      }
+      80% {
+        transform: translate(-40px, 0px);
+        opacity: 0;
+        filter: drop-shadow(0 0 4px var(--accent-soft));
+      }
+      100% {
+        transform: translate(0px, 0px);
+        opacity: 1;
+        filter: drop-shadow(0 0 8px var(--accent));
+      }
+    }
+
+    .wave-canvas,
+    .matrix-canvas,
+    .tts-wave {
+      width: 100%;
+      border-radius: 12px;
+      background: radial-gradient(circle at 0 0, rgba(15,23,42,0.9), #020617);
+      border: 1px solid rgba(31,41,55,0.9);
+    }
+
+    /* YOUTUBE TIMELINE — neon glow render bar */
+    .progress-line {
+      position: relative;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(15, 23, 42, 0.95);
+      box-shadow:
+        0 0 0 1px rgba(15, 23, 42, 1),
+        0 10px 30px rgba(0, 0, 0, 1);
+    }
+
+    .progress-line::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(
+        to right,
+        rgba(148, 163, 184, 0.14) 0,
+        rgba(148, 163, 184, 0.14) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      opacity: 0.35;
+      mix-blend-mode: soft-light;
+    }
+
+    .progress-line::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      transform-origin: left center;
+      transform: scaleX(var(--progress, 0));
+      background: linear-gradient(
+        90deg,
+        #ef4444,
+        #f97316,
+        var(--accent)
+      );
+      box-shadow:
+        0 0 20px rgba(239, 68, 68, 0.6),
+        0 0 32px rgba(34, 211, 238, 0.7);
+      transition: transform 3.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+
+
+    .pipe-net {
+      width: 100%;
+      height: 60px;
+    }
+
+    /* STACK & CONTACT */
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .stack-card {
+      border-radius: 18px;
+      padding: 1.1rem 1.1rem;
+      background:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.16), transparent 60%),
+        linear-gradient(145deg, rgba(15,23,42,0.98), rgba(0,0,0,0.98));
+      border: 1px solid rgba(31,41,55,0.98);
+      box-shadow:
+        0 18px 45px rgba(0,0,0,0.98),
+        0 0 24px rgba(0,0,0,1);
+      font-size: 0.86rem;
+      color: var(--fg-muted);
+    }
+
+    .stack-card h3 {
+      font-size: 0.96rem;
+      color: var(--fg-soft);
+      margin-bottom: 0.4rem;
+    }
+
+    .stack-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+
+    .stack-tag {
+      font-size: 0.76rem;
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.98);
+    }
+
+    .contact-card {
+      max-width: 540px;
+      margin: 0 auto;
+      border-radius: 22px;
+      padding: 1.8rem 1.6rem;
+      background:
+        radial-gradient(circle at 0 0, var(--accent-soft), transparent 60%),
+        linear-gradient(145deg, rgba(0,0,0,0.98), rgba(15,23,42,0.98));
+      border: 1px solid var(--accent-soft);
+      box-shadow:
+        0 24px 60px rgba(0,0,0,1),
+        0 0 30px var(--accent-soft);
+      font-size: 0.9rem;
+      color: var(--fg-muted);
+      text-align: center;
+    }
+
+    .contact-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.7rem;
+      color: var(--fg-soft);
+    }
+
+    .contact-links {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      align-items: center;
+      font-size: 0.88rem;
+    }
+
+    .contact-links a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* FOOTER */
+
+    footer {
+      padding: 1.7rem 0 2.3rem;
+      border-top: 1px solid rgba(15, 23, 42, 0.95);
+      font-size: 0.78rem;
+      color: var(--fg-muted);
+      backdrop-filter: blur(18px);
+      background: linear-gradient(
+        to top,
+        rgba(3, 7, 18, 0.96),
+        rgba(3, 7, 18, 0.9),
+        transparent
+      );
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* REVEAL */
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 0.6s ease-out,
+        transform 0.6s ease-out;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 1024px) {
+      .hero-inner {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-panel-wrap {
+        margin-top: 2.2rem;
+        max-width: 420px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-center { display: none; }
+      .hero { padding-top: 2.6rem; }
+    }
+
+    @media (max-width: 640px) {
+      section { padding: 3rem 0; }
+      .contact-card { padding: 1.5rem 1.3rem; }
+    }
+  </style>
 </head>
 <body>
-  <h1>My Website is LIVE 🚀</h1>
-  <p>No domain. No hosting. 100% free.</p>
+  <!-- BG -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="bg-cubes">
+    <div class="cube cube-1"></div>
+    <div class="cube cube-2"></div>
+    <div class="cube cube-3"></div>
+    <div class="cube cube-4"></div>
+  </div>
+  <canvas id="particle-bg"></canvas>
+
+  <!-- CURSOR -->
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <div class="page">
+    <!-- HEADER -->
+    <header>
+      <div class="container">
+        <nav class="nav">
+          <div class="nav-left">
+            <div class="logo-orb">
+              <div class="logo-orb-inner">AP</div>
+            </div>
+            <div class="logo-block">
+              <div class="logo-main">Ankit Panicker</div>
+              <div class="logo-sub">Automation · AI Voice · UI</div>
+            </div>
+          </div>
+
+          <div class="nav-center">
+            <div class="nav-links">
+              <a href="#hero">Overview</a>
+              <a href="#automations">Automations</a>
+              <a href="#what-i-build">What I Build</a>
+              <a href="#stack">Stack</a>
+              <a href="#contact">Contact</a>
+            </div>
+          </div>
+
+          <div class="nav-right">
+            <div class="theme-toggle-shell" id="theme-toggle">
+              <div class="theme-toggle-knob"></div>
+            </div>
+            <button class="btn btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+              Let’s build ⚡
+            </button>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <main>
+      <section class="hero" id="hero">
+        <div class="container">
+          <div class="hero-inner">
+            <div class="hero-left">
+              <div class="hero-pill">
+                <span class="hero-dot"></span>
+                AUDIO · VIDEO · CODE · UI
+              </div>
+
+              <h1 class="hero-title">
+                I build <span class="glitch" data-text="bold automation systems">bold automation systems</span>
+                for audio, video, code & UI.
+              </h1>
+
+              <p class="hero-subtitle">
+                I’m <strong>Ankit Panicker</strong> — I design & code end-to-end automation pipelines: voice cloning, TTS, STT, subtitle generators, YouTube video automations & daily systems wired in Python.
+              </p>
+
+              <p class="hero-subtitle emphasis">
+                I also care a lot about <strong>UI/UX, GUI and HTML front-end</strong> — matte black, frosted glass, and interfaces that make people curious to click everything. ✨
+              </p>
+
+              <div class="hero-actions">
+                <button class="btn btn-primary" onclick="document.getElementById('automations').scrollIntoView({behavior:'smooth'})">
+                  See my automations
+                </button>
+                <button class="btn btn-ghost" onclick="document.getElementById('what-i-build').scrollIntoView({behavior:'smooth'})">
+                  Explore what I build
+                </button>
+              </div>
+
+              <div class="cta-tagline">
+                ✨ <span id="typewriter"></span>
+              </div>
+            </div>
+
+            <div class="hero-right">
+              <div class="hero-panel-wrap holo-reflect scan-lines">
+                <div class="hero-panel">
+                  <div class="hero-panel-header">
+                    <div class="hero-panel-title">
+                      RUNTIME AUTOMATION HUD
+                    </div>
+                    <div class="hero-panel-status">
+                      <span class="hero-panel-status-dot"></span>
+                      Pipelines · LIVE
+                    </div>
+                  </div>
+
+                  <div class="hero-panel-main">
+                    <div class="hero-graph">
+                      <div class="droplet3d dr-hero-1"></div>
+                      <div class="droplet3d dr-hero-2"></div>
+                      <div class="droplet3d dr-hero-3"></div>
+
+                      <div class="droplet-shadow dr-shadow-1"></div>
+                      <div class="droplet-shadow dr-shadow-2"></div>
+                      <div class="droplet-shadow dr-shadow-3"></div>
+                    </div>
+
+                    <div class="hero-metrics">
+                      <div class="metric-row">
+                        <span class="metric-label">Automation stack</span>
+                        <span class="metric-value">
+                          Python · CLI · HTML UI
+                        </span>
+                      </div>
+                      <div class="metric-row">
+                        <span class="metric-label">Voice + video systems</span>
+                        <span class="metric-value">
+                          5+ live
+                          <span class="metric-pill">TTS · STT · clone</span>
+                        </span>
+                      </div>
+                      <div class="metric-row">
+                        <span class="metric-label">Daily jobs</span>
+                        <span class="metric-value">Quotes · motivation · uploads</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="hero-cli-chip">
+                    <div class="hero-cli-dot"></div>
+                    <span>
+                      CLI · Dark terminal, frosted UI, clean logs.
+                      I care about <strong>chunking, progress bars, retries & structure</strong> so your tools feel safe to run every day.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AUTOMATIONS -->
+      <section id="automations">
+        <div class="container">
+          <div class="section-header reveal">
+            <div class="eyebrow">Automation systems</div>
+            <h2 class="section-title">
+              A small set of <span>bold, working pipelines.</span>
+            </h2>
+            <p class="section-subtitle">
+              These aren’t just ideas — they’re real scripts & tools wired with APIs, voice models, front-end shells and logging.
+            </p>
+          </div>
+
+          <div class="cards-grid">
+            <article class="glass-card holo-reflect reveal">
+              <div class="card-kicker">Audio · Voice</div>
+              <h3 class="card-title">Voice clone + TTS studio</h3>
+              <p class="card-body">
+                A pipeline that takes raw text → cleans it → chunks it → runs TTS with cloned voices → exports clean audio with logs and retries.
+              </p>
+              <div class="card-meta-row">
+                <span class="card-tag">TTS · XTTS · pipelines</span>
+                <span>Progress bars · error safe</span>
+              </div>
+            </article>
+
+            <article class="glass-card holo-reflect reveal">
+              <div class="card-kicker">Subtitles</div>
+              <h3 class="card-title">Auto subtitles + SRT builder</h3>
+              <p class="card-body">
+                Feed a video / audio file and get timed subtitles, formatted SRT, and a ready-to-upload version for YouTube and shorts.
+              </p>
+              <div class="card-meta-row">
+                <span class="card-tag">STT · whisper · SRT</span>
+                <span>Clean CLI + logs</span>
+              </div>
+            </article>
+
+            <article class="glass-card holo-reflect reveal">
+              <div class="card-kicker">YouTube</div>
+              <h3 class="card-title">Automatic video generator</h3>
+              <p class="card-body">
+                Text prompts → script → TTS → visuals pipeline for auto-generated YouTube content, ready for manual review & upload.
+              </p>
+              <div class="card-meta-row">
+                <span class="card-tag">Thumbnails · scripts</span>
+                <span>Hook-first intros</span>
+              </div>
+            </article>
+
+            <article class="glass-card holo-reflect reveal">
+              <div class="card-kicker">Daily systems</div>
+              <h3 class="card-title">Daily quotes & motivation</h3>
+              <p class="card-body">
+                A daily automation that posts quotes / motivation using APIs & templates — no manual copy-paste, just scheduled output.
+              </p>
+              <div class="card-meta-row">
+                <span class="card-tag">APIs · schedulers</span>
+                <span>Zero touch once live</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- WHAT I BUILD (ANIMATED) -->
+      <section id="what-i-build">
+        <div class="container">
+          <div class="section-header reveal">
+            <div class="eyebrow">What I build</div>
+            <h2 class="section-title">
+              Futuristic systems <span>with real motion.</span>
+            </h2>
+            <p class="section-subtitle">
+              Every specialty below has its own live animation — so you can feel the system, not just read about it.
+            </p>
+          </div>
+
+          <div class="build-grid">
+            <!-- VOICE AUTOMATION -->
+            <div class="build-card holo-reflect scan-lines reveal">
+              <div class="build-icon mic-icon"></div>
+              <h3>🔊 Voice Automation</h3>
+              <p>Microphone pulse with a live wave behind the card. Perfect for cloned voices, narrations & audio systems.</p>
+              <canvas class="wave-canvas" width="300" height="80"></canvas>
+            </div>
+
+            <!-- YOUTUBE AUTOMATION -->
+            <div class="build-card holo-reflect scan-lines reveal">
+                <div class="build-icon yt-bar"></div>
+                <h3>🎬 YouTube Automation</h3>
+                <p>Multi-stage pipeline: fetching → transcribing → editing → publishing.</p>
+
+                <div class="yt-stages">
+                    <div class="yt-stage" data-label="fetching"></div>
+                    <div class="yt-stage" data-label="transcribing"></div>
+                    <div class="yt-stage" data-label="editing"></div>
+                    <div class="yt-stage" data-label="publishing"></div>
+                </div>
+
+                <div class="progress-line"></div>
+            </div>
+
+
+            <!-- CODE AUTOMATION -->
+            <div class="build-card holo-reflect scan-lines reveal">
+              <div class="build-icon matrix"></div>
+              <h3>🤖 Code Automation</h3>
+              <p>Matrix-style code rain on hover. Pipelines for scripts, CLIs, and backend glue that just keeps running.</p>
+              <canvas class="matrix-canvas" width="250" height="140"></canvas>
+            </div>
+
+            <!-- API AUTOMATION -->
+            <div class="build-card holo-reflect scan-lines reveal">
+              <div class="build-icon api"></div>
+              <h3>🧪 API Automation</h3>
+              <p>Glowing dots traveling through API pipes — perfect for fan-outs, retries & chained requests.</p>
+              <svg class="pipe-net"></svg>
+            </div>
+
+            <!-- TTS / STT / CLONE -->
+            <div class="build-card holo-reflect scan-lines reveal">
+              <div class="build-icon waveform"></div>
+              <h3>🎤 TTS · STT · Cloning</h3>
+              <p>Waveforms animate softly on loop, showing the flow from raw text → cleaned → voiced → exported.</p>
+              <canvas class="tts-wave" width="260" height="100"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STACK -->
+      <section id="stack">
+        <div class="container">
+          <div class="section-header reveal">
+            <div class="eyebrow">Stack & surface</div>
+            <h2 class="section-title">
+              From Python scripts to <span>matte-black front-ends.</span>
+            </h2>
+            <p class="section-subtitle">
+              I like when code feels like a product: solid automation under a UI that looks intentional — not default.
+            </p>
+          </div>
+
+          <div class="stack-grid">
+            <article class="stack-card reveal">
+              <h3>Automation & backend</h3>
+              <div>Python, CLI tools, logging, retries, chunking & job safety.</div>
+              <div class="stack-tags">
+                <span class="stack-tag">Python</span>
+                <span class="stack-tag">Async flows</span>
+                <span class="stack-tag">Progress bars</span>
+                <span class="stack-tag">Schedulers</span>
+              </div>
+            </article>
+
+            <article class="stack-card reveal">
+              <h3>UI · UX · Front-end</h3>
+              <div>Matte black, frosted glass, neon edges & clean HTML/CSS layouts that feel like an OS, not a template.</div>
+              <div class="stack-tags">
+                <span class="stack-tag">HTML · CSS</span>
+                <span class="stack-tag">Glassmorphism</span>
+                <span class="stack-tag">UI/UX thinking</span>
+                <span class="stack-tag">Responsive</span>
+              </div>
+            </article>
+
+            <article class="stack-card reveal">
+              <h3>Audio · Video · AI</h3>
+              <div>TTS, STT, cloned voices, subtitle pipelines and content-ready YouTube exports.</div>
+              <div class="stack-tags">
+                <span class="stack-tag">TTS / STT</span>
+                <span class="stack-tag">Voice clone</span>
+                <span class="stack-tag">Subtitles</span>
+                <span class="stack-tag">Shorts pipelines</span>
+              </div>
+            </article>
+
+            <article class="stack-card reveal">
+              <h3>APIs & glue</h3>
+              <div>REST APIs, keys, rate-limit safety and utilities that connect tools together.</div>
+              <div class="stack-tags">
+                <span class="stack-tag">API design</span>
+                <span class="stack-tag">Keys & auth</span>
+                <span class="stack-tag">Error handling</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact">
+        <div class="container">
+          <div class="section-header reveal">
+            <div class="eyebrow">Work with me</div>
+            <h2 class="section-title">
+              Let’s make your <span>automation feel like a product.</span>
+            </h2>
+            <p class="section-subtitle">
+              If you want bold automation with a matte, glass, futuristic UI around it — I can help you build it.
+            </p>
+          </div>
+
+          <div class="contact-card reveal">
+            <h3>Say hi 👋</h3>
+            <p>
+              Tell me what you want to automate — audio, video, dashboards, or internal tools — and we’ll design a pipeline with a UI that feels worthy of it.
+            </p>
+
+            <div class="contact-links">
+              <div>
+                <strong>Email:</strong>
+                <a href="mailto:ankypanicker@gmail.com">ankypanicker@gmail.com</a>
+              </div>
+              <div>
+                <strong>GitHub:</strong>
+                <a href="https://github.com/ankypanicker" target="_blank" rel="noreferrer">
+                  github.com/ankypanicker
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <span>© 2025 · Ankit Panicker · Automation · AI Voice · UI.</span>
+          <div class="footer-links">
+            <a href="#hero">Back to top</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // THEME TOGGLE
+    const themeToggle = document.getElementById("theme-toggle");
+    const body = document.body;
+
+    if (themeToggle) {
+      themeToggle.addEventListener("click", () => {
+        body.classList.toggle("theme-orange");
+      });
+    }
+
+    // PARTICLES
+    const particleCanvas = document.getElementById("particle-bg");
+    const pCtx = particleCanvas.getContext("2d");
+    let particles = [];
+    let w, h;
+
+    function resizeParticles() {
+      w = particleCanvas.width = window.innerWidth;
+      h = particleCanvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeParticles);
+    resizeParticles();
+
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.4,
+        dy: (Math.random() - 0.5) * 0.4,
+        alpha: Math.random() * 0.9 + 0.1
+      });
+    }
+
+    function drawParticles() {
+      pCtx.clearRect(0, 0, w, h);
+      const accent = getComputedStyle(document.body).getPropertyValue("--accent").trim() || "rgba(34,211,238,0.5)";
+      particles.forEach((p) => {
+        pCtx.globalAlpha = p.alpha;
+        pCtx.fillStyle = accent;
+        pCtx.beginPath();
+        pCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        pCtx.fill();
+
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > w) p.dx *= -1;
+        if (p.y < 0 || p.y > h) p.dy *= -1;
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    // CURSOR + TRAIL
+    const cursorDot = document.getElementById("cursor-dot");
+    const cursorRing = document.getElementById("cursor-ring");
+    const trail = [];
+
+    for (let i = 0; i < 12; i++) {
+      const div = document.createElement("div");
+      div.className = "cursor-trail";
+      document.body.appendChild(div);
+      trail.push(div);
+    }
+
+    let trIndex = 0;
+    document.addEventListener("mousemove", (e) => {
+      const { clientX: x, clientY: y } = e;
+
+      cursorDot.style.left = x + "px";
+      cursorDot.style.top = y + "px";
+      cursorRing.style.left = x + "px";
+      cursorRing.style.top = y + "px";
+
+      const t = trail[trIndex];
+      t.style.left = x + "px";
+      t.style.top = y + "px";
+      t.style.opacity = 1;
+      t.style.transform = "scale(1)";
+      setTimeout(() => {
+        t.style.opacity = 0;
+        t.style.transform = "scale(0.3)";
+      }, 10);
+
+      trIndex = (trIndex + 1) % trail.length;
+    });
+
+    function setCursorHover(state) {
+      if (!cursorRing) return;
+      if (state) cursorRing.classList.add("cursor-hover");
+      else cursorRing.classList.remove("cursor-hover");
+    }
+
+    document.querySelectorAll("a, button, .glass-card, .build-card").forEach(el => {
+      el.addEventListener("mouseenter", () => setCursorHover(true));
+      el.addEventListener("mouseleave", () => setCursorHover(false));
+    });
+
+    // TYPEWRITER
+    const tw = document.getElementById("typewriter");
+    const lines = [
+      "Where powerful automation meets beautiful UI.",
+      "Where AI pipelines feel like real products.",
+      "Where audio, video & code move together."
+    ];
+    let twIndex = 0;
+    let charIndex = 0;
+
+    function typeLoop() {
+      if (!tw) return;
+      let text = lines[twIndex].slice(0, charIndex++);
+      tw.textContent = text;
+
+      if (charIndex > lines[twIndex].length) {
+        setTimeout(() => {
+          charIndex = 0;
+          twIndex = (twIndex + 1) % lines.length;
+        }, 1600);
+      }
+      setTimeout(typeLoop, 60);
+    }
+    typeLoop();
+
+    // PARALLAX CUBES
+    document.addEventListener("mousemove", (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 20;
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+
+      document.querySelectorAll(".cube").forEach((cube, i) => {
+        const depth = (i + 1) * 1.6;
+        cube.style.transform =
+          `translate(${x / depth}px, ${y / depth}px) rotateX(8deg) rotateY(-8deg)`;
+      });
+    });
+
+    // SCROLL REVEAL
+    const reveals = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    reveals.forEach((el) => observer.observe(el));
+
+    // VOICE AUTOMATION — audio-style bar visualizer (always running)
+    document.querySelectorAll(".wave-canvas").forEach((canvas) => {
+        const ctx = canvas.getContext("2d");
+
+        function resize() {
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+        }
+        resize();
+        window.addEventListener("resize", resize);
+
+        const barCount = 40;
+        let bars = new Array(barCount).fill(0).map(() => Math.random());
+
+        function draw() {
+            const w = canvas.width;
+            const h = canvas.height;
+            if (!w || !h) return;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const accent =
+                getComputedStyle(document.body).getPropertyValue("--accent").trim() || "#22d3ee";
+
+            const barWidth = w / barCount;
+            const maxHeight = h * 0.8;
+
+            // vertical gradient for bars
+            const grad = ctx.createLinearGradient(0, 0, 0, h);
+            grad.addColorStop(0, accent);
+            grad.addColorStop(1, "rgba(34,211,238,0.1)");
+
+            for (let i = 0; i < barCount; i++) {
+                // smooth random target for “audio-like” motion
+                const target = Math.random();
+                bars[i] += (target - bars[i]) * 0.12; // easing
+                const barHeight = 4 + bars[i] * maxHeight;
+
+                const x = i * barWidth + barWidth * 0.2;
+                const y = (h - barHeight) / 2; // vertically centered
+                const bw = barWidth * 0.6;
+                const radius = Math.min(barWidth * 0.3, barHeight / 2);
+
+                // rounded vertical bar
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.moveTo(x, y + radius);
+                ctx.arcTo(x, y, x + bw, y, radius);
+                ctx.arcTo(x + bw, y, x + bw, y + barHeight, radius);
+                ctx.arcTo(x + bw, y + barHeight, x, y + barHeight, radius);
+                ctx.arcTo(x, y + barHeight, x, y, radius);
+                ctx.closePath();
+                ctx.fill();
+
+                // soft glow
+                ctx.save();
+                ctx.shadowColor = accent;
+                ctx.shadowBlur = 8;
+                ctx.globalAlpha = 0.35;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    });
+
+    // YOUTUBE TIMELINE — neon glow render bar
+    document.querySelectorAll(".progress-line").forEach((bar) => {
+        const duration = 3800;  // ms for one render sweep
+        const pause = 700;      // pause before restarting
+
+        function runSweep() {
+            // reset to 0 instantly (no anim)
+            bar.style.setProperty("--progress", "0");
+
+            // small delay so the reset is applied before anim
+            setTimeout(() => {
+                bar.style.setProperty("--progress", "1");
+            }, 40);
+        }
+
+        // initial start
+        runSweep();
+
+        // loop
+        setInterval(() => {
+            runSweep();
+        }, duration + pause);
+    });
+
+
+    // MATRIX CODE RAIN — always running (no hover needed)
+    document.querySelectorAll(".matrix-canvas").forEach((canvas) => {
+        const ctx = canvas.getContext("2d");
+
+        function resize() {
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+        }
+        resize();
+        window.addEventListener("resize", resize);
+
+        const chars = "01";
+        let columns = Math.floor(canvas.width / 12);
+        let drops = Array(columns).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0,0,0,0.12)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle =
+                getComputedStyle(document.body).getPropertyValue("--accent").trim() || "#22d3ee";
+            ctx.font = "16px monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                const x = i * 12;
+                const y = drops[i] * 18;
+
+                ctx.fillText(text, x, y);
+
+                // Reset drop randomly when below screen
+                if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
+
+                drops[i] += 0.5; 
+            }
+
+            requestAnimationFrame(drawMatrix);
+        }
+
+        drawMatrix();
+    });
+
+
+    // API PIPELINE — more "real" pipeline look with elbows + joints
+    document.querySelectorAll(".pipe-net").forEach((svg) => {
+        const NS = "http://www.w3.org/2000/svg";
+
+        const width = 270;
+        const height = 80;
+        svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        svg.innerHTML = ""; // clear anything old
+
+        // Colors from CSS accent
+        const accent =
+            getComputedStyle(document.body).getPropertyValue("--accent").trim() || "#22d3ee";
+
+        // Pipe colors (base + highlight for "3D" look)
+        const pipeBase = "#0f172a";       // dark steel
+        const pipeHighlight = "#94a3b8";  // light edge
+
+        // ---- DEFS: glow for packets ----
+        const defs = document.createElementNS(NS, "defs");
+        defs.innerHTML = `
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        `;
+        svg.appendChild(defs);
+
+        // ---- HELPERS ----
+        function makeLine(x1, y1, x2, y2) {
+            // base
+            const base = document.createElementNS(NS, "line");
+            base.setAttribute("x1", x1);
+            base.setAttribute("y1", y1);
+            base.setAttribute("x2", x2);
+            base.setAttribute("y2", y2);
+            base.setAttribute("stroke", pipeBase);
+            base.setAttribute("stroke-width", "7");
+            base.setAttribute("stroke-linecap", "round");
+            svg.appendChild(base);
+
+            // highlight
+            const hi = document.createElementNS(NS, "line");
+            hi.setAttribute("x1", x1);
+            hi.setAttribute("y1", y1);
+            hi.setAttribute("x2", x2);
+            hi.setAttribute("y2", y2);
+            hi.setAttribute("stroke", pipeHighlight);
+            hi.setAttribute("stroke-width", "3");
+            hi.setAttribute("stroke-linecap", "round");
+            hi.setAttribute("opacity", "0.9");
+            svg.appendChild(hi);
+
+            return { base, hi };
+        }
+
+        function makePath(d) {
+            const base = document.createElementNS(NS, "path");
+            base.setAttribute("d", d);
+            base.setAttribute("fill", "none");
+            base.setAttribute("stroke", pipeBase);
+            base.setAttribute("stroke-width", "7");
+            base.setAttribute("stroke-linecap", "round");
+            base.setAttribute("stroke-linejoin", "round");
+            svg.appendChild(base);
+
+            const hi = document.createElementNS(NS, "path");
+            hi.setAttribute("d", d);
+            hi.setAttribute("fill", "none");
+            hi.setAttribute("stroke", pipeHighlight);
+            hi.setAttribute("stroke-width", "3");
+            hi.setAttribute("stroke-linecap", "round");
+            hi.setAttribute("stroke-linejoin", "round");
+            hi.setAttribute("opacity", "0.9");
+            svg.appendChild(hi);
+
+            return { base, hi };
+        }
+
+        function makeJoint(x, y) {
+            const outer = document.createElementNS(NS, "circle");
+            outer.setAttribute("cx", x);
+            outer.setAttribute("cy", y);
+            outer.setAttribute("r", 6.5);
+            outer.setAttribute("fill", "#020617");
+            outer.setAttribute("stroke", pipeBase);
+            outer.setAttribute("stroke-width", "3");
+            svg.appendChild(outer);
+
+            const inner = document.createElementNS(NS, "circle");
+            inner.setAttribute("cx", x);
+            inner.setAttribute("cy", y);
+            inner.setAttribute("r", 3.5);
+            inner.setAttribute("fill", pipeHighlight);
+            inner.setAttribute("stroke", pipeBase);
+            inner.setAttribute("stroke-width", "1.5");
+            inner.setAttribute("opacity", "0.9");
+            svg.appendChild(inner);
+        }
+
+        function makeEndCap(x, y) {
+            const cap = document.createElementNS(NS, "rect");
+            cap.setAttribute("x", x - 2);
+            cap.setAttribute("y", y - 7);
+            cap.setAttribute("width", 4);
+            cap.setAttribute("height", 14);
+            cap.setAttribute("rx", 2);
+            cap.setAttribute("fill", pipeBase);
+            svg.appendChild(cap);
+        }
+
+        function makePacket(radius) {
+            const c = document.createElementNS(NS, "circle");
+            c.setAttribute("r", radius);
+            c.setAttribute("fill", accent);
+            c.setAttribute("filter", "url(#glow)");
+            svg.appendChild(c);
+            return c;
+        }
+
+        // ---- PIPE GEOMETRY ----
+
+        // main horizontal pipe
+        const mainStartX = 20;
+        const mainEndX = 250;
+        const mainY = 30;
+        makeLine(mainStartX, mainY, mainEndX, mainY);
+
+        // tee positions
+        const leftTeeX = 90;
+        const rightTeeX = 170;
+
+        // end caps (visual ends of pipeline)
+        makeEndCap(mainStartX, mainY);
+        makeEndCap(mainEndX, mainY);
+
+        // L-shaped branches (90° elbows)
+        const branchVertOffset = 12;
+        const branchHorizLen = 45;
+
+        makePath(`M ${leftTeeX} ${mainY} V ${mainY - branchVertOffset} H ${leftTeeX + branchHorizLen}`);
+        makePath(`M ${leftTeeX} ${mainY} V ${mainY + branchVertOffset} H ${leftTeeX + branchHorizLen}`);
+        makePath(`M ${rightTeeX} ${mainY} V ${mainY - branchVertOffset} H ${rightTeeX + branchHorizLen}`);
+        makePath(`M ${rightTeeX} ${mainY} V ${mainY + branchVertOffset} H ${rightTeeX + branchHorizLen}`);
+
+        makeJoint(leftTeeX, mainY);
+        makeJoint(rightTeeX, mainY);
+
+        // retry loop U-shape
+        const loopTopY = 38;
+        const loopBottomY = 60;
+        const loopLeftX = 135;
+        const loopRightX = 155;
+
+        makePath(
+            `M ${loopLeftX} ${loopTopY}
+             V ${loopBottomY - 5}
+             A 5 5 0 0 0 ${loopLeftX + 5} ${loopBottomY}
+             H ${loopRightX - 5}
+             A 5 5 0 0 0 ${loopRightX} ${loopBottomY - 5}
+             V ${loopTopY}`
+        );
+
+        // ---- PACKETS ----
+        const packets = [];
+
+        for (let i = 0; i < 3; i++) {
+            const p = makePacket(4);
+            packets.push({
+                el: p,
+                t: Math.random(),
+                speed: 0.0018 + Math.random() * 0.001,
+                path: (t) => ({
+                    x: mainStartX + (mainEndX - mainStartX) * t,
+                    y: mainY,
+                }),
+            });
+        }
+
+        function makeBranchPath(jX, jY, direction, horizLen, vertOffset) {
+            const total = horizLen + vertOffset;
+            return (t) => {
+                const s = t * total;
+                if (s <= vertOffset) {
+                    return {
+                        x: jX,
+                        y: jY + (direction === "up" ? -s : s),
+                    };
+                }
+                const s2 = s - vertOffset;
+                return {
+                    x: jX + s2,
+                    y: jY + (direction === "up" ? -vertOffset : vertOffset),
+                };
+            };
+        }
+
+        [
+            { x: leftTeeX, y: mainY, dir: "up" },
+            { x: leftTeeX, y: mainY, dir: "down" },
+            { x: rightTeeX, y: mainY, dir: "up" },
+            { x: rightTeeX, y: mainY, dir: "down" },
+        ].forEach((b) => {
+            const p = makePacket(3.5);
+            packets.push({
+                el: p,
+                t: Math.random(),
+                speed: 0.0022 + Math.random() * 0.0012,
+                path: makeBranchPath(b.x, b.y, b.dir, branchHorizLen, branchVertOffset),
+            });
+        });
+
+        // retry loop packet
+        const retryPacket = makePacket(3.5);
+        packets.push({
+            el: retryPacket,
+            t: Math.random(),
+            speed: 0.0025,
+            path: (t) => {
+                const d1 = loopBottomY - 5 - loopTopY;
+                const d2 = 10;
+                const d3 = loopRightX - loopLeftX - 10;
+                const total = d1 * 2 + d2 + d3;
+
+                let s = t * total;
+
+                if (s <= d1) return { x: loopLeftX, y: loopTopY + s };
+                s -= d1;
+
+                if (s <= d2 / 2) {
+                    const a = Math.PI + (Math.PI / 2) * (s / (d2 / 2));
+                    const cx = loopLeftX + 5;
+                    const cy = loopBottomY - 5;
+                    return { x: cx + Math.cos(a) * 5, y: cy + Math.sin(a) * 5 };
+                }
+                s -= d2 / 2;
+
+                if (s <= d3) return { x: loopLeftX + 5 + s, y: loopBottomY };
+                s -= d3;
+
+                if (s <= d2 / 2) {
+                    const a = (Math.PI / 2) + (Math.PI / 2) * (s / (d2 / 2));
+                    const cx = loopRightX - 5;
+                    const cy = loopBottomY - 5;
+                    return { x: cx + Math.cos(a) * 5, y: cy + Math.sin(a) * 5 };
+                }
+                s -= d2 / 2;
+
+                if (s <= d1) return { x: loopRightX, y: loopBottomY - 5 - s };
+
+                return { x: loopRightX, y: loopTopY };
+            },
+        });
+
+        function animate() {
+            packets.forEach((p) => {
+                p.t += p.speed;
+                if (p.t > 1) p.t = 0;
+                const pos = p.path(p.t);
+                p.el.setAttribute("cx", pos.x);
+                p.el.setAttribute("cy", pos.y);
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    });
+
+
+
+
+
+    // TTS/STT/CLONING — 3-stage pipeline waveform
+    document.querySelectorAll(".tts-wave").forEach((canvas) => {
+        const ctx = canvas.getContext("2d");
+
+        function resize() {
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+        }
+        resize();
+        window.addEventListener("resize", resize);
+
+        let t = 0;
+
+        function draw() {
+            const w = canvas.width;
+            const h = canvas.height;
+            if (!w || !h) return;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const accent =
+                getComputedStyle(document.body).getPropertyValue("--accent").trim() || "#22d3ee";
+            const accentAlt =
+                getComputedStyle(document.body).getPropertyValue("--accent-alt-strong").trim() || "#f59e0b";
+
+            // background subtle gradient
+            const bgGrad = ctx.createLinearGradient(0, 0, w, h);
+            bgGrad.addColorStop(0, "rgba(15,23,42,0.9)");
+            bgGrad.addColorStop(1, "rgba(2,6,23,1)");
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, w, h);
+
+            const midY = h / 2;
+
+            // Stage boundaries (3 segments)
+            const stageWidth = w / 3;
+
+            // helper to pick style by stage
+            function getStageParams(x) {
+                if (x < stageWidth) {
+                    // Stage 1: raw text (noisy, jittery)
+                    return {
+                        amp: h * 0.25,
+                        freq: 0.25,
+                        noise: 0.7,
+                        color: "rgba(148,163,184,0.9)",
+                    };
+                } else if (x < stageWidth * 2) {
+                    // Stage 2: cleaned text (more regular)
+                    return {
+                        amp: h * 0.3,
+                        freq: 0.18,
+                        noise: 0.3,
+                        color: accentAlt,
+                    };
+                } else {
+                    // Stage 3: voiced/exported (smooth, strong waveform)
+                    return {
+                        amp: h * 0.35,
+                        freq: 0.12,
+                        noise: 0.15,
+                        color: accent,
+                    };
+                }
+            }
+
+            // Draw main pipeline waveform
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+
+            for (let x = 0; x < w; x++) {
+                const stage = getStageParams(x);
+                const progress = x / w;
+
+                // base sin wave + slight t shift
+                let y =
+                    Math.sin((x * stage.freq + t * 0.08) * 0.12) *
+                    stage.amp;
+
+                // add local noise for roughness differences
+                const jitter = (Math.random() - 0.5) * stage.noise * h * 0.08;
+                y += jitter;
+
+                const yPos = midY + y * 0.7;
+
+                if (x === 0) {
+                    ctx.moveTo(x, yPos);
+                } else {
+                    ctx.lineTo(x, yPos);
+                }
+            }
+
+            // gradient across whole pipeline
+            const pipeGrad = ctx.createLinearGradient(0, 0, w, 0);
+            pipeGrad.addColorStop(0, "rgba(148,163,184,0.9)");
+            pipeGrad.addColorStop(0.33, accentAlt);
+            pipeGrad.addColorStop(0.66, accent);
+            pipeGrad.addColorStop(1, accent);
+            ctx.strokeStyle = pipeGrad;
+            ctx.stroke();
+
+            // subtle glow overlay
+            ctx.save();
+            ctx.globalAlpha = 0.3;
+            ctx.shadowColor = accent;
+            ctx.shadowBlur = 12;
+            ctx.stroke();
+            ctx.restore();
+
+            // stage separators (thin vertical markers)
+            ctx.save();
+            ctx.strokeStyle = "rgba(148,163,184,0.35)";
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(stageWidth, 8);
+            ctx.lineTo(stageWidth, h - 8);
+            ctx.moveTo(stageWidth * 2, 8);
+            ctx.lineTo(stageWidth * 2, h - 8);
+            ctx.stroke();
+            ctx.restore();
+
+            // moving "packet" dot flowing through stages
+            const flowPos = ((t * 0.8) % w);
+            const flowStage = getStageParams(flowPos);
+
+            // sample waveform y at flowPos (approx)
+            const baseY =
+                Math.sin((flowPos * flowStage.freq + t * 0.08) * 0.12) *
+                flowStage.amp;
+            const flowY = midY + baseY * 0.7;
+
+            ctx.save();
+            ctx.fillStyle = flowStage.color;
+            ctx.shadowColor = flowStage.color;
+            ctx.shadowBlur = 18;
+            ctx.beginPath();
+            ctx.arc(flowPos, flowY, 4.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // labels hinting pipeline stages (very subtle, optional)
+            ctx.font = "10px Inter, system-ui, sans-serif";
+            ctx.fillStyle = "rgba(148,163,184,0.7)";
+            ctx.textAlign = "center";
+            ctx.fillText("raw text", stageWidth * 0.5, h - 6);
+            ctx.fillText("cleaned", stageWidth * 1.5, h - 6);
+            ctx.fillText("voiced", stageWidth * 2.5, h - 6);
+
+            t += 1.6;
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    });
+  </script>
 </body>
 </html>
